@@ -7,7 +7,7 @@ import tensorflow as tf
 
 app = FastAPI()
 
-MODEL = tf.keras.models.load_model("C:/Users/suraj/Downloads/saved_models/1/1")
+MODEL = tf.keras.models.load_model("C:/Users/suraj/Downloads/Model/saved_models/1")
 CLASS_NAMES = ["Early Blight", "Late Blight", "Healthy"]
 
 @app.get("/ping")
@@ -26,13 +26,12 @@ async def predict(file: UploadFile = File(...)):
     
     prediction = MODEL.predict(img_batch)
     predicted_class = CLASS_NAMES[np.argmax(prediction)]
+    confidence = np.max(prediction[0])
     
-    return {"predicted_class": predicted_class}
-    
-
+    return {"predicted_class": predicted_class, "confidence": float(confidence)}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="localhost", port=8060)
+    uvicorn.run(app, host="localhost", port=8070)
 
 # ****************** ADVANTAGES OF FASTAPI *********************
 
@@ -40,3 +39,4 @@ if __name__ == "__main__":
 # in built documentation
 #  Fast Running Performance
 #  Less Time to Write code, few bugs
+# https://f4c9-14-139-207-163.ngrok.io/predict
